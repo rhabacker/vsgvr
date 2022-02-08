@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 
 project(VSGVR)
 
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+
 include(GNUInstallDirs)
 
 include(FetchContent)
