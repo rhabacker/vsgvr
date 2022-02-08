@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 
 project(VSGVR)
 
+include(GNUInstallDirs)
+
 include(FetchContent)
 
 if( NOT CMAKE_BUILD_TYPE AND NOT MSVC )
@@ -31,6 +33,10 @@ else()
   set( OPENVR_LIBDIR ${OPENVR_ROOT}/lib/linux64 )
 endif()
 
+# determine relative path from executable path to installed model files path
+file(RELATIVE_PATH VSGVR_INSTALL_REL_DATADIR ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATADIR}/vsgvr)
+add_definitions(-DVSGVR_INSTALL_REL_DATADIR="${VSGVR_INSTALL_REL_DATADIR}")
+
 #####################
 
 add_subdirectory( vsgvr )
@@ -50,5 +56,12 @@ install(TARGETS example_vr)
 configure_file(models/world/world.vsgt ${CMAKE_CURRENT_BINARY_DIR}/world.vsgt COPYONLY)
 configure_file(models/controller/controller.vsgt ${CMAKE_CURRENT_BINARY_DIR}/controller.vsgt COPYONLY)
 configure_file(models/controller/controller2.vsgt ${CMAKE_CURRENT_BINARY_DIR}/controller2.vsgt COPYONLY)
+
+install(FILES
+    models/world/world.vsgt
+    models/controller/controller.vsgt
+    models/controller/controller2.vsgt
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/vsgvr
+)
 
 add_subdirectory( tests )

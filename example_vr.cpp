@@ -14,7 +14,12 @@ int main(int argc, char **argv) {
     auto options = vsg::Options::create();
     arguments.read(options);
 
-    vsg::Path filename = "world.vsgt";
+    vsg::Paths searchPaths = vsg::getEnvPaths("VSG_FILE_PATH");
+    vsg::Path path = vsg::filePath(vsg::executableFilePath());
+    vsg::Path dataPath = path;
+    dataPath.append(VSGVR_INSTALL_REL_DATADIR);
+    searchPaths.push_back(dataPath);
+    vsg::Path filename = vsg::findFile("world.vsgt", searchPaths);
     if (argc > 1)
       filename = arguments[1];
     if (arguments.errors())
@@ -29,8 +34,8 @@ int main(int argc, char **argv) {
     // Initialise vr, and add nodes to the scene graph for each tracked device
     // TODO: If controllers are off when program starts they won't be added later
     auto vr = vsgvr::OpenVRContext::create();
-    auto controllerNodeLeft = vsg::read_cast<vsg::Node>("controller.vsgt");
-    auto controllerNodeRight = vsg::read_cast<vsg::Node>("controller2.vsgt");
+    auto controllerNodeLeft = vsg::read_cast<vsg::Node>(vsg::findFile("controller.vsgt", searchPaths));
+    auto controllerNodeRight = vsg::read_cast<vsg::Node>(vsg::findFile("controller2.vsgt", searchPaths));
     vsgvr::createDeviceNodes(vr, vsg_scene, controllerNodeLeft, controllerNodeRight);
 
     // Create the VR Viewer
