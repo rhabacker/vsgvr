@@ -20,7 +20,13 @@ int main(int argc, char **argv) {
     auto options = vsg::Options::create();
     arguments.read(options);
 
-    vsg::Path filename = "world.vsgt";
+    vsg::Paths searchPaths = vsg::getEnvPaths("VSG_FILE_PATH");
+    vsg::Path path = vsg::filePath(vsg::executableFilePath());
+    vsg::Path dataPath = path;
+    dataPath.append(VSGVR_INSTALL_REL_DATADIR);
+    searchPaths.push_back(dataPath);
+    searchPaths.push_back(path);
+    vsg::Path filename = vsg::findFile("world.vsgt", searchPaths);
     if (argc > 1)
       filename = arguments[1];
     if (arguments.errors())
