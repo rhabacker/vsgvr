@@ -21,8 +21,9 @@ set(OpenGL_GL_PREFERENCE GLVND)
 # add_subdirectory(deps/Format.cmake)
 
 # Package/System requirements
-find_package(vsg REQUIRED)
 find_package(Vulkan REQUIRED)
+find_package(vsg REQUIRED)
+find_package(vsgXchange)
 
 find_package(PkgConfig)
 if (PKG_CONFIG_FOUND)
@@ -70,6 +71,12 @@ target_link_libraries( example_vr vsg::vsg vsgvr )
 target_include_directories( example_vr PRIVATE 
   ${OPENVR_INCLUDE_DIRS}
   vsgvr/include )
+
+if (vsgXchange_FOUND)
+  target_compile_definitions(example_vr PRIVATE vsgXchange_FOUND)
+  target_link_libraries(example_vr vsgXchange::vsgXchange)
+endif()
+
 if( MSVC )
   set_target_properties(example_vr PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=${OPENVR_BINDIR}")
 endif()

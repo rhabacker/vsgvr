@@ -12,6 +12,12 @@ int main(int argc, char **argv) {
     // set up vsg::Options to pass in filepaths and ReaderWriter's and other IO
     // realted options to use when reading and writing files.
     auto options = vsg::Options::create();
+
+#ifdef vsgXchange_all
+    // add vsgXchange's support for reading and writing 3rd party file formats
+    options->add(vsgXchange::all::create());
+#endif
+
     arguments.read(options);
 
     vsg::Paths searchPaths = vsg::getEnvPaths("VSG_FILE_PATH");
