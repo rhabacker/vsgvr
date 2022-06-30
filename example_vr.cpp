@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
     vsg::Path path = vsg::filePath(vsg::executableFilePath());
     vsg::Path dataPath = path;
     dataPath.append(VSGVR_INSTALL_REL_DATADIR);
+    searchPaths.push_back(path);
     searchPaths.push_back(dataPath);
     vsg::Path filename = vsg::findFile("world.vsgt", searchPaths);
     if (argc > 1)
